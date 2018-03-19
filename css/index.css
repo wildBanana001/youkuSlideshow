@@ -1,0 +1,72 @@
+* {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.wrapper {
+	position: relative;
+	width: 1190px;
+	height: 300px;
+	margin: 100px auto 0px auto; 
+	overflow: hidden;
+}
+
+.wrapper .sliderPage {
+	width: 1190px;
+	height: 270px;
+}
+.wrapper .sliderPage li {
+	position: absolute;
+	background: black;
+}
+.wrapper .sliderPage .show2 {width: 530px;height: 224px;z-index: 2;top: 23px;opacity: 0.5;left:0;}
+.wrapper .sliderPage .show3 {width: 640px;height: 270px;z-index: 3;top: 0px;opacity: 1;left:275;}
+.wrapper .sliderPage .show4 {width: 530px;height: 224px;z-index: 2;top: 23px;opacity: 0.5;left:915px;}
+.wrapper .show0, .show1, .show5, .show6 {
+	z-index: 1;
+	opacity: 0;
+}
+.wrapper .sliderPage li img {
+	width: 100%;
+	height: 100%;
+}
+
+.wrapper .btn {
+	position: absolute;
+	top: 100px;
+	width: 50px;
+	height: 50px;
+	font-size: 70px;
+	line-height: 40px;
+	text-align: center;
+	opacity: 1;
+	color: #fff;
+	cursor: pointer;
+	z-index: 10;
+}
+.wrapper .leftBtn {
+	left: 20px;
+}
+.wrapper .rightBtn {
+	right: 20px;
+}
+
+.wrapper .oBtn {
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+	height: 20px;
+	text-align: center;
+}
+.wrapper .oBtn li {
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	background: #ccc;
+	cursor: pointer;
+}
+.wrapper .oBtn .active {
+	background: skyblue;
+}
