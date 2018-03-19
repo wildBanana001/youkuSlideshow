@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>优酷轮播图</title>
+</head>
+<body>
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		.wrapper {
+			position: relative;
+			width: 1190px;
+			height: 300px;
+			margin: 100px auto 0px auto; 
+			overflow: hidden;
+		}
+
+		.wrapper .sliderPage {
+			width: 1190px;
+			height: 270px;
+		}
+		.wrapper .sliderPage li {
+			position: absolute;
+			background: black;
+		}
+		.wrapper .sliderPage .show2 {width: 530px;height: 224px;z-index: 2;top: 23px;opacity: 0.5;left:0;}
+		.wrapper .sliderPage .show3 {width: 640px;height: 270px;z-index: 3;top: 0px;opacity: 1;left:275;}
+		.wrapper .sliderPage .show4 {width: 530px;height: 224px;z-index: 2;top: 23px;opacity: 0.5;left:915px;}
+		.wrapper .show0, .show1, .show5, .show6 {
+			z-index: 1;
+			opacity: 0;
+		}
+		.wrapper .sliderPage li img {
+			width: 100%;
+			height: 100%;
+		}
+
+		.wrapper .btn {
+			position: absolute;
+			top: 100px;
+			width: 50px;
+			height: 50px;
+			font-size: 70px;
+			line-height: 40px;
+			text-align: center;
+			opacity: 1;
+			color: #fff;
+			cursor: pointer;
+			z-index: 10;
+		}
+		.wrapper .leftBtn {
+			left: 20px;
+		}
+		.wrapper .rightBtn {
+			right: 20px;
+		}
+
+		.wrapper .oBtn {
+			position: absolute;
+			bottom: 0px;
+			width: 100%;
+			height: 20px;
+			text-align: center;
+		}
+		.wrapper .oBtn li {
+			display: inline-block;
+			width: 15px;
+			height: 15px;
+			border-radius: 50%;
+			background: #ccc;
+			cursor: pointer;
+		}
+		.wrapper .oBtn .active {
+			background: skyblue;
+		}
+	</style>
+
+	<div class="wrapper">
+		<ul class="sliderPage">
+			<li class="show0"><img src="./img/img00.jpg" alt="秦时明月"></li>
+			<li class="show1"><img src="./img/img02.jpg" alt="博人传"></li>
+			<li class="show2"><img src="./img/img03.jpg" alt="黑色四叶草"></li>
+			<li class="show3"><img src="./img/img01.jpg" alt="魔性的小猪佩奇"></li>
+			<li class="show4"><img src="./img/img04.jpg" alt="最动漫"></li>
+			<li class="show5"><img src="./img/img05.jpg" alt="名侦探柯南"></li>
+			<li class="show6"><img src="./img/img06.jpg" alt="银魂"></li>
+		</ul>
+		<div class="btn leftBtn"> < </div>
+		<div class="btn rightBtn"> > </div>
+		<div class="oBtn">
+			<ul>
+				<li class="active"></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
+	</div>
+
+	<script src="./jquery-3.2.1.js"></script>
+	<script type="text/javascript">
+		//定义初始变量
+		var speed = 700,
+			locked = true,
+			delayTimer,
+			liIndex = 0,
+			show2Css = {'width': '530px','height': '224px','top': '23px','left':0},
+			show3Css = {'width': '640px','height': '270px','top': '0px','left':'275px'},
+			show4Css = {'width': '530px','height': '224px','top': '23px','left':'915px'};
+
+		//给展示的图片加上样式
+		$('.show2').css(show2Css);
+		$('.show3').css(show3Css);
+		$('.show4').css(show4Css);
+
+		//触发事件
+		function bindEvent() {
+			//右键
+			$('.rightBtn').click(function(){
+				controlMove('turnRight');
+			});
+			//左键
+			$('.leftBtn').click(function(){
+				controlMove('turnLeft');
+			});
+			//小圆点
+			$('.oBtn li').click(function() {
+				var count,
+					oLiIndex = $(this).index();
+				speed = 200;
+				if(oLiIndex > liIndex) {
+					count = oLiIndex - liIndex;
+					while(count--) {
+						MoveRight();
+					}
+				}else {
+					count = liIndex - oLiIndex;
+					while(count--) {
+						MoveLeft();
+					}
+				}
+				liIndex = oLiIndex;
+				speed = 700;
+			});
+		}
+
+		//鼠标停放在轮播图上停止运动，移开后恢复
+		$('.sliderPage').mouseenter(function() { 
+            clearTimeout(delayTimer); 
+        }); 
+        $('.sliderPage').mouseleave(function() { 
+            locked = true;
+            delayTimer = setTimeout(controlMove, 2000);
+        });
+
+        //控制移动
+		function controlMove(direction) {
+			if (locked) {
+				locked = false;
+				clearTimeout(delayTimer);
+				if(!direction || direction === 'turnRight') {
+					MoveRight();			
+				}else if(direction === 'turnLeft') {
+					MoveLeft();
+				}
+			}
+		}
+
+		//向右运动
+		function MoveRight() {
+			if(liIndex < 6) {
+				liIndex++;
+			}else {
+				liIndex = 0;
+			}
+			//给该索引小圆点加active样式，移除兄弟节点样式
+			$('.oBtn li').eq(liIndex).addClass('active').siblings().removeClass('active');
+
+			$('.show3').animate(show2Css,speed);
+			$('.show4').animate(show3Css,speed);
+			$('.show5').animate(show4Css,speed,function() {
+				delayTimer = setTimeout(controlMove, 2000);
+				locked = true;
+			});
+
+			$('.show0').attr('class','show6');
+			$('.show1').attr('class','show0');
+			$('.show2').attr('class','show1');
+			$('.show3').attr('class','show2');
+			$('.show4').attr('class','show3');
+			$('.show5').attr('class','show4');
+
+			if($('.show4').next().length != 0) {
+				$('.show4').next().attr('class','show5');
+			}else {
+				$(".sliderPage li:first").attr("class","show5"); 
+			}
+			$('.show1').removeAttr('style');
+		}
+
+		//向左运动
+		function MoveLeft() {
+			if(liIndex > 0) {
+				liIndex--;
+			}else {
+				liIndex = 6;
+			}
+			$('.oBtn li').eq(liIndex).addClass('active').siblings().removeClass('active');
+
+			$('.show1').animate(show2Css,speed);
+			$('.show2').animate(show3Css,speed);
+			$('.show3').animate(show4Css,speed,function() {
+				delayTimer = setTimeout(controlMove, 2000);
+				locked = true;
+			});
+		
+			$('.show6').attr('class','show0');
+			$('.show5').attr('class','show6');
+			$('.show4').attr('class','show5');
+			$('.show3').attr('class','show4');
+			$('.show2').attr('class','show3');
+			$('.show1').attr('class','show2');
+			$('.show0').attr('class','show1');
+
+			if($('.show6').next().length != 0) {
+				$('.show6').next().attr('class','show0');
+			}else {
+				$(".sliderPage li:first").attr("class","show0"); 
+			}
+			$('.show5').removeAttr('style');
+		}
+		
+		bindEvent();
+		delayTimer = setTimeout(controlMove, 2000);
+
+	</script>
+</body>
+</html>
